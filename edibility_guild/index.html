@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#0e2b27">
+<title>Fort McMurray Hospital Apple Guild Planner</title>
+<style>
+:root{
+  --bg:#061512;--bg2:#0c2621;--panel:rgba(10,31,27,.82);--panel2:rgba(18,48,41,.82);--line:rgba(190,242,211,.16);
+  --text:#edf8f0;--muted:#a9c8bb;--accent:#a9f4ba;--accent2:#ffc76b;--danger:#ff9b8f;--sky:#8ed7ff;
+  --shadow:0 18px 60px rgba(0,0,0,.32);--radius:18px;--top-h:72px;--left-w:258px;--right-w:310px;--bottom-h:64px;
+}
+[data-theme="light"]{--bg:#eff7ef;--bg2:#d9eee0;--panel:rgba(255,255,255,.9);--panel2:rgba(246,255,248,.94);--line:rgba(12,55,39,.14);--text:#11271d;--muted:#4b6a5d;--accent:#176f43;--accent2:#8a5300;--danger:#a23228;--sky:#236a95;--shadow:0 15px 40px rgba(31,74,51,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);min-height:100vh;overflow-x:hidden}
+a{color:var(--sky)}button,input,select{font:inherit}button{cursor:pointer}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Aurora / orchard background */
+.bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-2;background:
+ radial-gradient(circle at 18% 16%,rgba(120,245,177,.13),transparent 28%),radial-gradient(circle at 82% 12%,rgba(126,196,255,.12),transparent 30%),linear-gradient(180deg,transparent 0 58%,rgba(0,0,0,.2));}
+.aurora{position:absolute;width:75vw;height:42vh;filter:blur(34px);opacity:.3;border-radius:50%;animation:drift 18s ease-in-out infinite alternate;background:conic-gradient(from 90deg,rgba(62,255,157,.15),rgba(54,171,255,.17),rgba(244,212,107,.12),rgba(62,255,157,.15))}.aurora.a1{left:-15vw;top:-6vh}.aurora.a2{right:-25vw;top:10vh;animation-duration:24s;animation-direction:alternate-reverse}.forest{position:absolute;left:0;right:0;bottom:0;height:28vh;opacity:.18;background:repeating-linear-gradient(78deg,transparent 0 28px,rgba(5,19,14,.88) 29px 30px),linear-gradient(180deg,transparent,#03110d)}
+.particle{position:absolute;width:8px;height:8px;border-radius:60% 40% 70% 30%;background:rgba(181,245,191,.46);animation:leafFall linear infinite}.particle.apple{border-radius:50%;background:rgba(255,116,92,.38);box-shadow:0 0 18px rgba(255,116,92,.25)}
+@keyframes drift{from{transform:translate3d(-2vw,-2vh,0) rotate(-5deg)}to{transform:translate3d(10vw,7vh,0) rotate(7deg)}}
+@keyframes leafFall{0%{transform:translate3d(0,-10vh,0) rotate(0);opacity:0}12%{opacity:.8}100%{transform:translate3d(8vw,115vh,0) rotate(560deg);opacity:0}}
+
+/* Splash */
+#splash{position:fixed;inset:0;z-index:1000;background:radial-gradient(circle at 50% 45%,#153d34 0,#071b16 55%,#03100d 100%);display:grid;place-items:center;padding:24px;transition:opacity .55s ease,visibility .55s ease}.splash-hidden{opacity:0;visibility:hidden}.splash-card{max-width:760px;width:100%;text-align:center}.tree-mark{width:130px;height:130px;margin:0 auto 24px;position:relative}.tree-mark:before{content:"";position:absolute;left:57px;bottom:8px;width:16px;height:68px;border-radius:8px;background:linear-gradient(#8a603b,#56371f)}.tree-mark:after{content:"";position:absolute;inset:3px 7px 48px;border-radius:50%;background:radial-gradient(circle at 34% 32%,#aaf2b3 0 5%,transparent 6%),radial-gradient(circle at 68% 38%,#ffb384 0 5%,transparent 6%),radial-gradient(circle at 44% 65%,#ff8b79 0 5%,transparent 6%),radial-gradient(circle,#57aa6d 0 48%,#225d43 49% 70%,transparent 71%);box-shadow:0 0 55px rgba(109,244,154,.2)}.rings{position:absolute;inset:0;border:1px solid rgba(176,255,207,.25);border-radius:50%;animation:ring 2.8s ease-out infinite}.rings.r2{animation-delay:.9s}.rings.r3{animation-delay:1.8s}@keyframes ring{0%{transform:scale(.55);opacity:0}30%{opacity:.65}100%{transform:scale(1.45);opacity:0}}
+.splash-card h1{font-size:clamp(2rem,6vw,4.2rem);line-height:.95;margin:.2em 0}.kicker{letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:750;font-size:.78rem}.splash-card p{color:#bed8ce;max-width:630px;margin:14px auto 22px;line-height:1.6}.progress{height:7px;background:rgba(255,255,255,.08);border-radius:99px;overflow:hidden;margin:18px auto;width:min(520px,90%)}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,#71e5a0,#8ed7ff,#ffc76b);animation:load 2.4s ease forwards}@keyframes load{to{width:100%}}.primary{border:1px solid rgba(183,255,207,.36);background:linear-gradient(135deg,rgba(91,226,133,.18),rgba(88,188,255,.12));color:var(--text);padding:12px 18px;border-radius:12px;font-weight:750}.primary:hover,.primary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Four-menu shell */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--top-h);z-index:100;background:rgba(4,18,14,.78);backdrop-filter:blur(18px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}.brand{display:flex;gap:10px;align-items:center;min-width:220px}.brand-badge{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(133,239,163,.25),rgba(119,195,255,.18));border:1px solid var(--line)}.brand strong{display:block}.brand small{display:block;color:var(--muted)}.top-search{flex:1;display:flex;gap:8px}.top-search input{width:100%;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);border-radius:11px;padding:11px 13px}.iconbtn,.dock button,.rail button{border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);border-radius:11px;padding:9px 11px}.iconbtn:hover,.dock button:hover,.rail button:hover{background:rgba(145,237,174,.1)}
+.leftbar,.rightbar{position:fixed;top:var(--top-h);bottom:var(--bottom-h);z-index:80;background:rgba(4,19,15,.76);backdrop-filter:blur(16px);overflow:auto;border-color:var(--line)}.leftbar{left:0;width:var(--left-w);border-right:1px solid var(--line);padding:18px 14px}.rightbar{right:0;width:var(--right-w);border-left:1px solid var(--line);padding:18px 14px}.bottom{position:fixed;left:0;right:0;bottom:0;height:var(--bottom-h);z-index:100;background:rgba(4,18,14,.86);backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;justify-content:center;align-items:center;padding:8px}.dock{display:flex;gap:8px;max-width:900px;width:100%;justify-content:space-around}.dock button{flex:1;max-width:160px}.rail-title{font-size:.74rem;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin:4px 5px 10px}.rail{display:grid;gap:6px}.rail a{color:var(--text);text-decoration:none;padding:9px 10px;border-radius:10px}.rail a:hover,.rail a:focus-visible{background:rgba(145,237,174,.1);outline:none}.filter-group{margin:18px 0;padding-top:14px;border-top:1px solid var(--line)}.filter-group label{display:flex;gap:8px;align-items:center;margin:8px 3px;color:var(--muted)}.filter-group select,.filter-group input[type=range]{width:100%}.select{width:100%;padding:9px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text)}
+main{margin:calc(var(--top-h) + 18px) calc(var(--right-w) + 18px) calc(var(--bottom-h) + 28px) calc(var(--left-w) + 18px);max-width:1500px}.section{scroll-margin-top:90px;margin-bottom:26px}.hero{padding:24px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(140deg,rgba(31,91,68,.55),rgba(17,52,60,.42));box-shadow:var(--shadow);overflow:hidden;position:relative}.hero:after{content:"";position:absolute;right:-90px;top:-100px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(177,244,186,.12),transparent 68%)}.hero-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:18px}.hero h1{font-size:clamp(2rem,4vw,4rem);line-height:1;margin:.2em 0}.hero p{color:var(--muted);max-width:830px;line-height:1.65}.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.pill{font-size:.78rem;padding:6px 9px;border-radius:99px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--muted)}.callout{border:1px solid var(--line);border-radius:16px;padding:15px;background:rgba(0,0,0,.12)}.callout strong{display:block;margin-bottom:6px}.callout.warn{border-color:rgba(255,184,111,.32);background:rgba(130,73,9,.11)}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}.metric{padding:14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.035)}.metric strong{font-size:1.35rem;display:block}.metric small{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:var(--radius);padding:18px;box-shadow:0 8px 28px rgba(0,0,0,.12)}.panel h2,.panel h3{margin-top:0}.panel p,.panel li{color:var(--muted);line-height:1.6}.mini-table{width:100%;border-collapse:collapse}.mini-table th,.mini-table td{border-bottom:1px solid var(--line);padding:9px;text-align:left;vertical-align:top}.mini-table th{font-size:.77rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.mini-table tr:last-child td{border-bottom:0}
+.toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:12px 0}.toolbar .select{width:auto;min-width:185px}.count{margin-left:auto;color:var(--muted)}
+.species-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.species{border:1px solid var(--line);background:linear-gradient(160deg,var(--panel),rgba(11,28,24,.72));border-radius:18px;overflow:hidden;transition:transform .2s ease,border-color .2s ease}.species:hover{transform:translateY(-2px);border-color:rgba(181,244,197,.32)}.species-head{padding:15px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:start}.species h3{margin:0;font-size:1.15rem}.latin{font-style:italic;color:var(--muted);font-size:.86rem}.rank{font-weight:800;font-size:.78rem;border:1px solid var(--line);padding:5px 8px;border-radius:99px;white-space:nowrap}.scoreline{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;padding:0 15px 13px}.score{background:rgba(255,255,255,.04);padding:8px;border-radius:10px;text-align:center}.score b{display:block;font-size:1rem}.score span{font-size:.66rem;color:var(--muted)}.bar{height:4px;background:rgba(255,255,255,.08);border-radius:99px;margin-top:6px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--sky))}.tags{padding:0 15px 12px;display:flex;flex-wrap:wrap;gap:6px}.tag{font-size:.72rem;border:1px solid var(--line);padding:4px 7px;border-radius:99px;color:var(--muted)}.species details{border-top:1px solid var(--line)}.species summary{padding:12px 15px;cursor:pointer;font-weight:700}.detail{padding:0 15px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}.detail div{background:rgba(255,255,255,.025);border-radius:10px;padding:10px}.detail strong{display:block;margin-bottom:4px;font-size:.8rem;color:var(--accent)}.detail p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.5}.selectrow{display:flex;gap:8px;padding:0 15px 15px}.selectrow button{flex:1;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);border-radius:10px;padding:9px}.selectrow button.selected{background:rgba(115,231,152,.15);border-color:rgba(139,242,169,.4)}
+.matrix-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px}.matrix{border-collapse:collapse;min-width:620px;width:100%}.matrix th,.matrix td{border:1px solid var(--line);padding:8px;text-align:center;font-size:.8rem}.matrix th{background:rgba(255,255,255,.05);position:sticky;top:0}.matrix .namecell{text-align:left;position:sticky;left:0;background:var(--panel2);min-width:155px}.sy2{background:rgba(86,230,131,.17)}.sy1{background:rgba(83,188,255,.12)}.sy0{color:var(--muted)}.sym1{background:rgba(255,195,98,.12)}.sym2{background:rgba(255,115,100,.14)}
+.preset-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.preset{border:1px solid var(--line);border-radius:13px;padding:13px;background:rgba(255,255,255,.03)}.preset h4{margin:0 0 6px}.preset p{font-size:.86rem;margin:0 0 10px}.preset button{width:100%;border:1px solid var(--line);background:rgba(127,235,159,.08);color:var(--text);padding:8px;border-radius:9px}
+.legend{display:flex;flex-wrap:wrap;gap:9px;color:var(--muted);font-size:.78rem}.legend span{padding:4px 7px;border-radius:7px;border:1px solid var(--line)}
+.rightbar h3{margin:0 0 8px}.rightbar p{font-size:.84rem;color:var(--muted);line-height:1.5}.right-kpis{display:grid;grid-template-columns:1fr 1fr;gap:7px}.right-kpi{padding:9px;border:1px solid var(--line);border-radius:10px}.right-kpi b{display:block}.right-kpi span{font-size:.68rem;color:var(--muted)}.selected-list{display:grid;gap:6px;margin:10px 0}.sel-item{display:flex;justify-content:space-between;gap:8px;padding:8px;border-radius:9px;background:rgba(255,255,255,.035);font-size:.8rem}.warning{font-size:.78rem;color:#ffd39c;margin:6px 0}.weights label{display:grid;grid-template-columns:1fr 42px;gap:8px;align-items:center;font-size:.78rem;color:var(--muted);margin:8px 0}.weights input{grid-column:1/3;width:100%}
+.badge-high{color:#bbf4c7}.badge-mid{color:#ffe0a0}.badge-low{color:#ffaaa0}
+.sources li{margin:8px 0}.sources small{color:var(--muted)}
+.hide{display:none!important}.mobile-only{display:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:1180px){:root{--left-w:220px;--right-w:278px}.species-grid{grid-template-columns:1fr}.hero-grid{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(2,1fr)}.preset-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){:root{--top-h:64px;--bottom-h:66px}.brand{min-width:auto}.brand small{display:none}.top-search{display:none}.leftbar,.rightbar{top:var(--top-h);bottom:var(--bottom-h);width:min(88vw,330px);transition:transform .25s ease}.leftbar{transform:translateX(-105%)}.rightbar{transform:translateX(105%)}.leftbar.open{transform:none}.rightbar.open{transform:none}.mobile-only{display:inline-flex}#mobileSearchWrap.mobile-only{display:block!important}main{margin:calc(var(--top-h) + 12px) 12px calc(var(--bottom-h) + 22px)}.grid2{grid-template-columns:1fr}.preset-grid{grid-template-columns:1fr}.dock button span{display:none}.dock button{font-size:1.2rem}.detail{grid-template-columns:1fr}.toolbar .select{min-width:0;flex:1}.hero{padding:18px}}
+@media(max-width:520px){.metrics{grid-template-columns:1fr 1fr}.scoreline{grid-template-columns:repeat(2,1fr)}.topbar{padding:8px}.brand strong{font-size:.9rem}.hero h1{font-size:2.2rem}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}.particle,.aurora,.rings{display:none!important}}
+@media print{.topbar,.leftbar,.rightbar,.bottom,#splash,.bg,.toolbar button,.selectrow{display:none!important}body{background:#fff;color:#111}.panel,.species,.hero{box-shadow:none;background:#fff;color:#111;border:1px solid #ccc;break-inside:avoid}main{margin:0;max-width:none}.species-grid{grid-template-columns:1fr 1fr}.muted,.panel p,.panel li,.detail p,.latin{color:#444!important}a{color:#111;text-decoration:underline}.section{page-break-inside:auto}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="aurora a1"></div><div class="aurora a2"></div><div class="forest"></div><div id="particles"></div></div>
+
+<div id="splash" role="dialog" aria-modal="true" aria-labelledby="splashTitle">
+  <div class="splash-card">
+    <div class="tree-mark" aria-hidden="true"><span class="rings"></span><span class="rings r2"></span><span class="rings r3"></span></div>
+    <div class="kicker">Boreal edible-support design</div>
+    <h1 id="splashTitle">Hospital Apple Guild</h1>
+    <p>Cold-hardy edible companions for Fort McMurray's existing apple trees — designed around survival value, nutrition, fast harvest, low disturbance, public-space safety, and northern resilience.</p>
+    <div class="progress" aria-hidden="true"><span></span></div>
+    <button class="primary" id="enterBtn">Enter orchard planner</button>
+  </div>
+</div>
+
+<header class="topbar" aria-label="Top menu">
+  <button class="iconbtn mobile-only" id="leftToggle" aria-label="Open navigation">☰</button>
+  <div class="brand"><div class="brand-badge" aria-hidden="true">🍎</div><div><strong>Fort McMurray Apple Guild</strong><small>Hospital-site edible companion planner</small></div></div>
+  <div class="top-search"><label class="sr-only" for="search">Search species</label><input id="search" type="search" placeholder="Search species, function, harvest, planting method…"></div>
+  <button class="iconbtn" id="themeBtn" title="Toggle theme">◐</button>
+  <button class="iconbtn mobile-only" id="rightToggle" aria-label="Open combination lab">⚗</button>
+</header>
+
+<aside class="leftbar" id="leftbar" aria-label="Left menu">
+  <div class="rail-title">Explore</div>
+  <nav class="rail">
+    <a href="#overview">Overview</a><a href="#site">Site strategy</a><a href="#catalog">Species catalog</a><a href="#matrix">Combination matrix</a><a href="#planting">Planting plan</a><a href="#buying">Costs & sourcing</a><a href="#sources">Evidence & sources</a>
+  </nav>
+  <div class="filter-group mobile-only" style="display:none" id="mobileSearchWrap"><div class="rail-title">Search</div><input id="mobileSearch" class="select" type="search" placeholder="Search species…"></div>
+  <div class="filter-group">
+    <div class="rail-title">Food type</div>
+    <label><input type="checkbox" class="cat" value="berry" checked> Berry</label>
+    <label><input type="checkbox" class="cat" value="fruit" checked> Fruit</label>
+    <label><input type="checkbox" class="cat" value="nut" checked> Nut</label>
+    <label><input type="checkbox" class="cat" value="leaf" checked> Leaf / herb</label>
+    <label><input type="checkbox" class="cat" value="stalk" checked> Stalk</label>
+    <label><input type="checkbox" class="cat" value="tuber" checked> Tuber</label>
+    <label><input type="checkbox" class="cat" value="flower" checked> Edible flower</label>
+  </div>
+  <div class="filter-group">
+    <div class="rail-title">Site filters</div>
+    <label><input type="checkbox" id="hospitalOnly"> Hospital-fit ≥ 75</label>
+    <label><input type="checkbox" id="perennialOnly"> Perennial only</label>
+    <label><input type="checkbox" id="nativeOnly"> Native / native-range only</label>
+  </div>
+  <button class="iconbtn" id="resetFilters" style="width:100%">Reset filters</button>
+</aside>
+
+<aside class="rightbar" id="rightbar" aria-label="Right menu / combination lab">
+  <h3>⚗ Combination Lab</h3>
+  <p>Select species from the catalog. This panel scores the chosen guild and surfaces public-site conflicts.</p>
+  <div class="right-kpis"><div class="right-kpi"><b id="selCount">0</b><span>selected species</span></div><div class="right-kpi"><b id="guildScore">—</b><span>weighted guild score</span></div></div>
+  <div class="weights">
+    <label>Survival value <output id="wSurvOut">30</output><input id="wSurv" type="range" min="0" max="50" value="30"></label>
+    <label>Ease <output id="wEaseOut">20</output><input id="wEase" type="range" min="0" max="50" value="20"></label>
+    <label>Nutrition <output id="wNutOut">25</output><input id="wNut" type="range" min="0" max="50" value="25"></label>
+    <label>Fast harvest <output id="wTimeOut">10</output><input id="wTime" type="range" min="0" max="50" value="10"></label>
+    <label>Hospital fit <output id="wHospOut">15</output><input id="wHosp" type="range" min="0" max="50" value="15"></label>
+  </div>
+  <div class="rail-title">Selected</div><div id="selectedList" class="selected-list"><p>No species selected yet.</p></div>
+  <div id="guildWarnings"></div>
+  <button class="iconbtn" id="clearSelection" style="width:100%">Clear selection</button>
+</aside>
+
+<nav class="bottom" aria-label="Bottom menu"><div class="dock">
+  <button id="toTop" title="Top">↑ <span>Top</span></button>
+  <button id="showSelected" title="Show shortlist">★ <span>Shortlist</span></button>
+  <button id="printBtn" title="Print plan">⎙ <span>Print</span></button>
+  <button id="exportBtn" title="Export plan">⇩ <span>Export</span></button>
+  <button id="importBtn" title="Import plan">⇧ <span>Import</span></button>
+  <input type="file" id="importFile" accept="application/json" hidden>
+</div></nav>
+
+<main>
+<section id="overview" class="section hero">
+  <div class="hero-grid">
+    <div>
+      <div class="kicker">Assumed site · Northern Lights Regional Health Centre area</div>
+      <h1>A cold-hardy edible guild around existing apples.</h1>
+      <p>This planner prioritizes plants likely to tolerate Fort McMurray's short, cold season while adding edible yield, pollinator continuity, groundcover, habitat, or soil support without treating the apple root zone as spare digging space. The strongest public-space default is a <strong>low-disturbance inner ring</strong> of chives + strawberry, with <strong>haskap/currant</strong> in brighter outer positions and larger shrubs placed well beyond paths and major apple roots.</p>
+      <div class="pillrow"><span class="pill">Zone target: 3a or colder</span><span class="pill">Existing-tree-first</span><span class="pill">No hidden telemetry</span><span class="pill">Works offline as one file</span><span class="pill">2026 planning data</span></div>
+    </div>
+    <div class="callout warn"><strong>⚠ Institutional-site rule</strong>Do not plant, dig, harvest for public consumption, or alter mulch/irrigation without property-manager approval. Confirm pesticide history, soil contamination/salt exposure, underground utilities, snow-storage patterns, maintenance access, and wildlife policy first. The page is a design/decision aid—not authorization.</div>
+  </div>
+  <div class="metrics"><div class="metric"><strong id="metricSpecies">18</strong><small>edible candidates</small></div><div class="metric"><strong>3a</strong><small>Fort McMurray planning zone</small></div><div class="metric"><strong>0.6 m</strong><small>minimum no-dig trunk buffer</small></div><div class="metric"><strong>4 rings</strong><small>placement logic</small></div></div>
+</section>
+
+<section id="site" class="section">
+  <div class="grid2">
+    <article class="panel"><h2>Site strategy: protect the existing apple first</h2>
+      <table class="mini-table"><thead><tr><th>Ring</th><th>Placement</th><th>Best use</th></tr></thead><tbody>
+        <tr><td>0 · trunk</td><td>0–0.6 m</td><td>Mulch only. Keep trunk flare uncovered. No digging, raised soil, or irrigation hardware against bark.</td></tr>
+        <tr><td>1 · shallow guild</td><td>~0.6–1.5 m</td><td>Small plugs/divisions: chives, wild/alpine strawberry, sorrel where light allows. Hand tools only.</td></tr>
+        <tr><td>2 · productive edge</td><td>~1.5–3 m</td><td>Haskap, compact currants, gooseberry only where root excavation can be kept modest and access remains clear.</td></tr>
+        <tr><td>3 · outer resilience</td><td>3 m+ / separate bed</td><td>Saskatoon, raspberry, hazelnut, squashberry; aggressive or large plants only in bounded perimeter beds.</td></tr>
+      </tbody></table>
+      <p><strong>Why:</strong> mature apple roots extend beyond the canopy. Large planting holes sever roots and can create competition. Top-dressing with compost and adding shallow plugs is safer than excavating a dense “permaculture guild” directly beneath an established tree.</p>
+    </article>
+    <article class="panel"><h2>Hospital-ground constraints</h2>
+      <ul><li><strong>Snow + salt:</strong> avoid snow-dump zones and curb edges receiving de-icer. Salt stress can overwhelm otherwise hardy plants.</li><li><strong>Food safety:</strong> confirm no incompatible pesticide/herbicide regime; do not assume ornamental fruit is managed as food.</li><li><strong>Slip / access:</strong> keep dropped berries, nuts, canes and irrigation off sidewalks, ambulance access and accessibility routes.</li><li><strong>Wildlife:</strong> berries and fallen apples can attract birds and mammals. Use harvest/cleanup schedules; avoid high-attraction thickets near entrances.</li><li><strong>Clinical context:</strong> prefer low-thorn, non-toxic-to-touch species near patient paths. Rhubarb leaves are toxic if eaten; thorny/suckering species need separation.</li><li><strong>Pollinators:</strong> flowering herbs help, but avoid dense bee forage immediately beside doors or high-traffic seating if facilities staff identify sting-risk concerns.</li></ul>
+    </article>
+  </div>
+  <div class="callout" style="margin-top:14px"><strong>Recommended starting geometry</strong>For one mature apple: preserve a mulch-only trunk zone; trial 6–10 chive clumps + 8–16 strawberry plugs in the brighter half of the outer root zone; place one compact currant or a compatible pair of haskaps beyond the densest roots if space allows. Observe one full season before adding a larger layer.</div>
+</section>
+
+<section id="catalog" class="section">
+  <div class="panel"><h2>Sortable edible-support catalog</h2><p>Scores are planning indices (0–100), not scientific measurements. <strong>Survival value</strong> combines cold reliability, perennial return, useful edible yield, storability and labor. <strong>Nutrition</strong> combines nutrient density/diversity rather than calories alone. Use the sliders in the right menu to create your own weighted ranking.</p>
+    <div class="toolbar"><select id="sortBy" class="select" aria-label="Sort species"><option value="importance">Sort: survival importance</option><option value="ease">Sort: ease of planting</option><option value="nutrition">Sort: nutrition</option><option value="time">Sort: fastest first harvest</option><option value="hospital">Sort: hospital-site fit</option><option value="name">Sort: name A–Z</option></select><select id="sortDir" class="select" aria-label="Sort direction"><option value="desc">High → low</option><option value="asc">Low → high</option></select><button class="iconbtn" id="weightedSort">Use weighted score</button><span id="resultCount" class="count"></span></div>
+    <div id="speciesGrid" class="species-grid"></div>
+  </div>
+</section>
+
+<section id="matrix" class="section">
+  <div class="panel"><h2>Recommended combination matrix</h2><p>The matrix is generated from your shortlist. It rewards complementary layers, flowering seasons and functions; it flags combinations likely to create crowding or maintenance problems. It is deliberately conservative around institutional paths.</p>
+    <div class="legend"><span class="sy2">+2 strong complement</span><span class="sy1">+1 compatible</span><span class="sy0">0 neutral</span><span class="sym1">−1 manage carefully</span><span class="sym2">−2 avoid co-locating</span></div>
+    <div id="matrixHolder" class="matrix-wrap" style="margin-top:12px"><div style="padding:16px;color:var(--muted)">Select 2–8 species to generate a useful pairwise matrix.</div></div>
+    <h3 style="margin-top:20px">One-click guild presets</h3><div class="preset-grid" id="presetGrid"></div>
+  </div>
+</section>
+
+<section id="planting" class="section">
+ <div class="grid2">
+  <article class="panel"><h2>Planting sequence</h2><ol><li><strong>Map before digging:</strong> trunk, dripline, irrigation, utilities, paths, snow piles, sunny sectors and current mulch depth.</li><li><strong>Get owner approval:</strong> confirm AHS/site-facilities scope, who maintains/harvests, whether public picking is permitted, and acceptable species.</li><li><strong>Test the soil:</strong> pH, organic matter, salinity/EC if road-salt exposure is plausible, and contaminants if the bed history is uncertain.</li><li><strong>Start shallow:</strong> add compost as a surface top-dress, then small plugs/divisions. Do not rototill beneath established apples.</li><li><strong>Water establishment, not dependence:</strong> deep, infrequent watering in year 1 when dry; taper once perennial roots establish.</li><li><strong>Mulch:</strong> wood chips around woody plants; keep crowns/stems clear. Straw works well for strawberry winter protection.</li><li><strong>Observe one winter:</strong> record dieback, snow load, salt injury, sun/shade and maintenance conflicts before scaling.</li></ol></article>
+  <article class="panel"><h2>Seasonal timing for Fort McMurray</h2><table class="mini-table"><tbody><tr><td><strong>Late winter / early spring</strong></td><td>Order bare-root shrubs/crowns; seek approvals; map roots and utilities.</td></tr><tr><td><strong>As soil becomes workable</strong></td><td>Plant dormant bare-root shrubs and divisions; spring planting is preferred for many woody edibles.</td></tr><tr><td><strong>After hard frost risk eases</strong></td><td>Transplant herbs/annual flowers and tender nursery stock; mulch and water.</td></tr><tr><td><strong>June–August</strong></td><td>Harvest early crops, weed lightly, keep fruit off paths, record pollinator and wildlife activity.</td></tr><tr><td><strong>Late summer</strong></td><td>Stop pushing tender late growth with nitrogen; continue watering woody plants during drought.</td></tr><tr><td><strong>After dormancy</strong></td><td>Winter mulch strawberries; protect young shrubs from browsing; document snow-storage effects.</td></tr></tbody></table></article>
+ </div>
+</section>
+
+<section id="buying" class="section">
+  <div class="panel"><h2>Cost & sourcing strategy</h2><p>Costs in the catalog are <strong>planning ranges in CAD</strong> for Canadian retail/online nursery material in 2026, not quotes. Live-plant inventory in Fort McMurray is strongly seasonal, so call ahead. Current local places with garden/landscape inventory include the Canadian Tire main store at 1 Hospital Street, RONA Fort McMurray, and McMurray Landscape Center; specialty cold-hardy fruit often requires a Canadian mail-order nursery. The closest store is not automatically the best genetic material—cultivar hardiness matters more.</p>
+    <div class="grid2"><div><h3>Buy locally when…</h3><ul><li>You can inspect roots/canes and avoid shipping stress.</li><li>The tag clearly identifies cultivar + hardiness zone.</li><li>You need simple plugs, herbs, strawberries, mulch or soil amendments.</li><li>You can confirm the plant has been hardened for northern conditions.</li></ul></div><div><h3>Mail-order when…</h3><ul><li>You need named haskap pollination partners, disease-resistant currants/gooseberries, native shrubs or beaked hazelnut.</li><li>Local tags only say “assorted berry.”</li><li>You want economical bare-root bundles.</li><li>Order timing lets dormant stock arrive before active growth.</li></ul></div></div>
+    <div class="callout"><strong>Price reality check</strong>Recent Canadian examples found during research included roughly $20 raspberry plants, $10–35 Saskatoon stock, $14–20 gooseberries, ~$43 beaked hazelnut, and a two-cultivar haskap container listed around $59. Treat these as reference points only; shipping, pot size and seasonal stock can move prices substantially.</div>
+  </div>
+</section>
+
+<section id="sources" class="section">
+ <div class="panel sources"><h2>Evidence, assumptions & sources</h2><p>The page separates sourced horticultural facts from planning judgments. Compatibility/hospital-fit scores are synthesis, not published trial results.</p><ol>
+  <li><a href="https://www.albertahealthservices.ca/nlrhc/nlrhc.aspx" target="_blank" rel="noopener">Alberta Health Services — Northern Lights Regional Health Centre</a><br><small>Confirms the facility and Fort McMurray location.</small></li>
+  <li><a href="https://www.rmwb.ca/media/bdbbbn2g/rmwb-parks-master-plan.pdf" target="_blank" rel="noopener">RMWB Parks Master Plan</a><br><small>Lists Fort McMurray as Canadian plant hardiness zone 3a and describes subarctic conditions.</small></li>
+  <li><a href="https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/fruit/haskap.php" target="_blank" rel="noopener">University of Saskatchewan — Haskaps</a><br><small>Zone-1 hardiness, pollination/cultivar and northern-garden information.</small></li>
+  <li><a href="https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/fruit/saskatoon.php" target="_blank" rel="noopener">University of Saskatchewan — Saskatoons</a><br><small>Zone-1 hardiness, dimensions, planting depth, sun and harvest information.</small></li>
+  <li><a href="https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/fruit/strawberry.php" target="_blank" rel="noopener">University of Saskatchewan — Strawberries</a><br><small>Far-north cultivar guidance, planting, mulch and harvest timing.</small></li>
+  <li><a href="https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-currants-and-gooseberries-in-the-home-garden" target="_blank" rel="noopener">University of Minnesota Extension — Currants & gooseberries</a><br><small>Zone-3 cultivars, planting and typical 1–3 year fruiting.</small></li>
+  <li><a href="https://extension.umn.edu/agroforestry/growing-edible-fruits-and-nuts" target="_blank" rel="noopener">University of Minnesota Extension — Edible fruits & nuts</a><br><small>Hardiness/dimensions for honeyberry, juneberry, currants, gooseberry, aronia, hazelnut, lingonberry and buffaloberry.</small></li>
+  <li><a href="https://extension.umn.edu/garden-and-home/yard-and-garden/gardening-in-minnesota/growing-rhubarb" target="_blank" rel="noopener">University of Minnesota Extension — Rhubarb</a><br><small>Planting, dimensions, first harvest and toxic-leaf warning.</small></li>
+  <li><a href="https://gardening.usask.ca/gardening-advice/gardenline-nested-pages/food-plant-pages/vegetables/jerusalem-artichoke.php" target="_blank" rel="noopener">University of Saskatchewan — Jerusalem artichoke</a><br><small>Extreme hardiness, planting, 130-day maturity, size and aggressive spreading.</small></li>
+  <li><a href="https://gardening.usask.ca/articles-and-lists/articles-plant-descriptions/perennials/alliiums.php" target="_blank" rel="noopener">University of Saskatchewan — Alliums/chives</a><br><small>Edibility plus pollinator value and low pest pressure.</small></li>
+  <li><a href="https://research.fs.usda.gov/feis/species-reviews/shecan" target="_blank" rel="noopener">US Forest Service — Canada buffaloberry</a><br><small>Native nitrogen-fixing shrub ecology, dimensions, fruit and wildlife value.</small></li>
+ </ol><p><strong>Version:</strong> 2026-10-02. Cost/availability is time-sensitive; horticultural ranges vary by cultivar, microclimate, soil, winter snow cover and nursery stock.</p></div>
+</section>
+
+<section class="section"><div class="panel"><h2>Zero-harm / anti-inversion note</h2><p>This design is meant to increase local edible resilience without converting a public healthcare landscape into an unmanaged experiment. The safety hierarchy is: people and clinical access → existing trees/soil → ecological function → harvest. A species that is excellent on an acreage may be deliberately ranked low beside a hospital walkway.</p><p><strong>Attributions & licenses:</strong> Original interface and synthesis prepared for Foster + Navi / Planetary Restoration Archive. Plant facts are summarized from linked public university, government and extension sources; no proprietary source code is incorporated. The file uses no third-party libraries, tracking, accounts or network calls at runtime.</p></div></section>
+</main>
+
+<noscript><div style="position:fixed;inset:20px;z-index:2000;background:#fff;color:#111;padding:24px;overflow:auto;border-radius:16px"><h1>JavaScript is off</h1><p>The research summary and site strategy are still present in the file, but sorting, filtering and the combination matrix require JavaScript. Enable JavaScript locally to use the planner.</p></div></noscript>
+
+<script>
+const species = [
+ {id:'haskap',name:'Haskap / Honeyberry',latin:'Lonicera caerulea',category:'berry',layer:'shrub',zone:'1',native:true,perennial:true,importance:84,ease:84,nutrition:95,hospital:91,time:18,height:'1.2–1.8 m',spread:'1–1.5 m',spacing:'1.2–1.8 m',germ:'Seed is slow/variable; best from 1–2 yr container or bare-root stock.',fruit:'Often 1–2 years from good nursery stock; meaningful crops ~3–4 years.',harvest:'Very early summer; often before strawberries.',plant:'Plant two compatible cultivars with overlapping bloom. Spring plant; full sun preferred. Set at nursery depth, water deeply, mulch 5–8 cm away from stems.',cost:'$25–65 per plant; combo pots can cost more.',buy:'Local garden centres seasonally; named cultivars from prairie/Canadian fruit nurseries. Look for Aurora + Honeybee or another verified compatible pair.',nutritionText:'High anthocyanins/polyphenols; vitamin C and fibre; strong nutrient-density candidate.',support:['early pollinator','cold extreme','fruit yield','low thorn'],risk:'Bird pressure; needs a compatible pollen partner. Avoid planting large holes close to major apple roots.',bloom:'early',aggressive:false,appleRisk:0},
+ {id:'saskatoon',name:'Saskatoon berry',latin:'Amelanchier alnifolia',category:'berry',layer:'large shrub',zone:'1',native:true,perennial:true,importance:89,ease:86,nutrition:90,hospital:79,time:24,height:'1–8 m (cultivar dependent)',spread:'3–6 m unpruned',spacing:'1–1.5 m hedgerow; more for specimen shrubs',germ:'Seed needs stratification and is slow; use a named nursery plant/whip.',fruit:'Usually 2–4 years; mature hedgerow can fill in ~5 years.',harvest:'Mid–late July in prairie conditions.',plant:'Full sun, well-drained loam/sandy loam. Plant 2.5–5 cm deeper than nursery depth to encourage a multi-stem shrub.',cost:'$15–40 small plant; larger pots higher.',buy:'Seasonal local nurseries; specialty Canadian fruit nurseries. Compact/low-suckering cultivars such as Pembina or Regent fit urban space better than Northline.',nutritionText:'Fibre, manganese, iron and polyphenols/anthocyanins; berries dry/freeze well.',support:['native food','pollinator','wildlife','long-lived'],risk:'Can become large and sucker; Rosaceae relative of apple, so monitor shared disease/pest issues and keep good airflow.',bloom:'early',aggressive:true,appleRisk:1},
+ {id:'redcurrant',name:'Red currant',latin:'Ribes rubrum',category:'berry',layer:'shrub',zone:'3',native:false,perennial:true,importance:80,ease:87,nutrition:89,hospital:91,time:18,height:'0.9–1.5 m',spread:'0.9–1.5 m',spacing:'≥0.9 m',germ:'Seed is unnecessary for a designed planting; use bare-root or potted stock.',fruit:'1–3 years after planting.',harvest:'Mid-summer; cultivar dependent.',plant:'Plant spring stock ~2.5 cm deeper than nursery level; full sun to partial shade; rich, well-drained soil. Annual renewal pruning after establishment.',cost:'$18–40 per shrub.',buy:'Local nurseries seasonally or Canadian mail-order. Prefer hardy, disease-resistant cultivars such as Rovada where available.',nutritionText:'High vitamin C, fibre and organic acids; useful fresh, dried, frozen or preserved.',support:['partial shade','fruit yield','different family','compact'],risk:'Lower yield in deep shade; verify local cultivar hardiness rather than generic “currant.”',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'blackcurrant',name:'Black currant',latin:'Ribes nigrum',category:'berry',layer:'shrub',zone:'3',native:false,perennial:true,importance:85,ease:84,nutrition:99,hospital:89,time:18,height:'1–1.8 m',spread:'1–1.5 m',spacing:'1–1.5 m',germ:'Best from named bare-root/potted stock, not seed.',fruit:'1–3 years; Titania can produce relatively early.',harvest:'Mid–late summer.',plant:'Same basic Ribes method: spring plant, slightly deeper than nursery level, mulch and prune out aging canes as the shrub matures.',cost:'$20–45 per shrub.',buy:'Specialty fruit nurseries are often best for named resistant cultivars. Seek Titania/Ben Sarek or comparable cold-hardy material.',nutritionText:'Exceptionally vitamin-C rich with anthocyanins and fibre; one of the densest micronutrient berries in this set.',support:['partial shade','fruit yield','different family','preserving'],risk:'Some cultivars can be alternate hosts for white pine blister rust; use resistant cultivars where possible.',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'gooseberry',name:'Gooseberry — low-spine cultivar',latin:'Ribes spp.',category:'berry',layer:'shrub',zone:'3',native:false,perennial:true,importance:77,ease:82,nutrition:83,hospital:72,time:16,height:'0.6–1.5 m',spread:'0.9–1.5 m',spacing:'≥0.9 m',germ:'Plant bare-root or potted stock.',fruit:'1–3 years; some cultivars can fruit in planting year.',harvest:'Summer, once berries soften and color.',plant:'Full sun to partial shade; spring plant slightly deeper than nursery level. Choose nearly thornless material for public landscapes.',cost:'$14–35 per shrub.',buy:'Canadian nurseries/mail-order; ask specifically for Captivator, Tixia or another low-spine hardy cultivar.',nutritionText:'Vitamin C, fibre and polyphenols with useful fresh/preserve value.',support:['partial shade','compact','fruit yield','different family'],risk:'Spines are a public-path liability. Do not use heavily spined cultivars next to seating/walkways.',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'raspberry',name:'Red raspberry — Boyne/Nova type',latin:'Rubus idaeus',category:'berry',layer:'cane shrub',zone:'3',native:true,perennial:true,importance:81,ease:77,nutrition:89,hospital:58,time:14,height:'1.2–1.8 m',spread:'Spreading patch',spacing:'~1 m initially',germ:'Use dormant bare-root canes or potted plants; seed is not practical.',fruit:'Floricane types usually fruit the year after new canes grow; established stock can crop in 1–2 years.',harvest:'Mid-summer; timing varies by cultivar.',plant:'Spring plant dormant canes about 13–15 cm deep, water well, trellis if needed, and contain suckers.',cost:'$15–30 per plant.',buy:'Seasonal garden centres or mail-order; Boyne is a common cold-hardy benchmark.',nutritionText:'High fibre, vitamin C and diverse polyphenols; freezes well.',support:['fruit yield','pollinator','native range','preserving'],risk:'Suckers aggressively and can form thorny/arching canes; keep in a separate, bounded outer bed.',bloom:'mid',aggressive:true,appleRisk:0},
+ {id:'strawberry',name:'June-bearing strawberry — Kent/Cavendish type',latin:'Fragaria × ananassa',category:'berry',layer:'groundcover',zone:'3',native:false,perennial:true,importance:75,ease:83,nutrition:92,hospital:94,time:4,height:'0.15–0.25 m',spread:'Runner-forming',spacing:'~45 cm',germ:'Bare-root crowns establish faster and more reliably than seed.',fruit:'Possible first-year fruit, but removing first flowers can strengthen the patch; strong crop the next summer.',harvest:'Late June–early July for June-bearers.',plant:'Plant crown midpoint exactly at soil surface. Full sun for fruit; mulch, keep evenly moist, add loose straw over winter in exposed sites.',cost:'$2–8 bare-root each in bundles; $8–18 pots.',buy:'Very common seasonally at garden centres; for far north, seek June-bearing cultivars such as Kent/Cavendish/Annapolis.',nutritionText:'Very high vitamin C per calorie, manganese, folate and polyphenols.',support:['groundcover','fast harvest','pollinator','low profile'],risk:'Can compete for moisture if densely matted. Fruit near paths needs frequent picking/cleanup.',bloom:'mid',aggressive:true,appleRisk:0},
+ {id:'wildstrawberry',name:'Wild / alpine strawberry',latin:'Fragaria virginiana / F. vesca',category:'berry',layer:'groundcover',zone:'2',native:true,perennial:true,importance:70,ease:89,nutrition:91,hospital:95,time:5,height:'0.1–0.2 m',spread:'Low runner-forming mat',spacing:'25–40 cm',germ:'Seed may take 2–6 weeks after cold treatment; plugs/divisions are far easier.',fruit:'Small harvest in first season from plugs; better from year 2.',harvest:'Early–mid summer, often extended in small flushes.',plant:'Use plugs to minimize root disturbance around apple. Tolerates a little more woodland-edge character than commercial strawberry, though fruit improves with sun.',cost:'$5–15 plug/pot; seed $4–8.',buy:'Native-plant nurseries, specialty seed suppliers, occasional local garden-centre stock.',nutritionText:'Small but nutrient-dense fruit; vitamin C and polyphenols; modest total yield.',support:['native groundcover','low disturbance','pollinator','soil cover'],risk:'Low yield compared with cultivated strawberry; protect from trampling.',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'chives',name:'Chives',latin:'Allium schoenoprasum',category:'leaf',layer:'herb',zone:'3',native:false,perennial:true,importance:68,ease:97,nutrition:80,hospital:98,time:2,height:'0.25–0.45 m',spread:'Clumping, 0.25–0.4 m',spacing:'20–30 cm',germ:'7–21 days from seed; divisions/transplants give near-instant establishment.',fruit:'Leaf harvest in the first season; edible flowers later.',harvest:'Leaves from spring onward; flowers late spring/early summer.',plant:'Plant small divisions/plugs shallowly in sunny gaps. Divide every few years. Excellent near-root-zone option because holes can be tiny.',cost:'$3–7 seed; $5–15 pot/division.',buy:'Widely available at local garden centres and seed racks.',nutritionText:'Vitamin K, vitamin C, folate and sulfur compounds; used as a nutrient-dense herb, not a calorie crop.',support:['pollinator','tiny planting hole','edible herb','low maintenance'],risk:'Flowers draw bees; consider door/seating clearance. Evidence for direct pest-repellent effects on apple is weaker than the pollinator benefit.',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'rhubarb',name:'Rhubarb',latin:'Rheum × hybridum',category:'stalk',layer:'large herb',zone:'3 trial',native:false,perennial:true,importance:71,ease:81,nutrition:65,hospital:55,time:20,height:'0.6–1 m',spread:'~0.9–1.2 m',spacing:'~0.9 m each way',germ:'Seed emerges ~2–3 weeks; crowns/divisions are preferable.',fruit:'Do not harvest first year; light harvest year 2; full harvest from year 3.',harvest:'One of the earliest spring foods; primary harvest through June.',plant:'Plant a crown/division in full sun and rich, well-drained soil. Give it a dedicated outer position—it is a large feeder and should not be dug into dense apple roots.',cost:'$12–30 crown; $4–8 seed.',buy:'Garden centres and mail-order perennial suppliers; local divisions are common but nursery stock reduces disease risk.',nutritionText:'Low-calorie stalk with fibre and vitamin K; useful early food but not a major calorie source.',support:['early harvest','weed shading','perennial','large biomass'],risk:'Leaves are toxic if eaten; signage and public access make this lower priority at a hospital.',bloom:'late',aggressive:false,appleRisk:0},
+ {id:'sorrel',name:'Garden sorrel',latin:'Rumex acetosa',category:'leaf',layer:'herb',zone:'3',native:false,perennial:true,importance:74,ease:94,nutrition:82,hospital:92,time:2,height:'0.3–0.6 m',spread:'0.3–0.45 m',spacing:'30–45 cm',germ:'7–21 days; easy from seed or division.',fruit:'Leaf harvest starts within weeks once established.',harvest:'Very early spring through summer; cut before heavy flowering for tender leaves.',plant:'Direct sow or transplant into a sunny/part-shade outer-root-zone patch. Remove seed stalks if spread is not desired.',cost:'$3–7 seed; $7–15 pot.',buy:'Seed racks, herb nurseries and Canadian online seed companies.',nutritionText:'Vitamin C, vitamin A precursors and minerals; tart leaves contain oxalates, so use as a supplemental green rather than a staple.',support:['fast harvest','early green','small footprint','partial shade'],risk:'Contains oxalic acid; not a high-volume food for everyone. Can self-seed if allowed to flower.',bloom:'late',aggressive:false,appleRisk:0},
+ {id:'lovage',name:'Lovage',latin:'Levisticum officinale',category:'leaf',layer:'tall herb',zone:'3',native:false,perennial:true,importance:69,ease:86,nutrition:70,hospital:77,time:4,height:'1.2–2 m',spread:'0.6–1 m',spacing:'0.75–1 m',germ:'10–20+ days; transplanting a nursery start is easier in short seasons.',fruit:'Leaves/stems can be harvested first season; strongest plant from year 2.',harvest:'Spring through summer; seed later in season.',plant:'Plant at the north/back edge so height does not shade apple guild. Deep, fertile soil; leave space and avoid repeated digging.',cost:'$4–8 seed; $10–20 pot.',buy:'Herb nurseries and specialty seed companies.',nutritionText:'Used as a strong-flavoured culinary herb; contributes phytonutrients but modest bulk nutrition.',support:['beneficial insects','tall herb layer','perennial','edible seed/leaf'],risk:'Large stature can shade lower crops; not an inner-ring plant.',bloom:'late',aggressive:false,appleRisk:0},
+ {id:'hazelnut',name:'Beaked hazelnut',latin:'Corylus cornuta',category:'nut',layer:'large shrub',zone:'3',native:true,perennial:true,importance:96,ease:70,nutrition:97,hospital:58,time:48,height:'1.5–3.5 m',spread:'1.5–3 m',spacing:'2.5–4 m',germ:'Seed requires long cold stratification and variable germination; buy plants.',fruit:'Typically several years; plan ~4–7 years for useful nut crops depending on stock/site.',harvest:'Late summer–early fall.',plant:'Place well outside the apple root concentration in full sun. Use more than one genetically distinct plant for dependable nut set.',cost:'$25–50+ per plant.',buy:'Native/specialty nurseries; verify beaked hazelnut or proven zone-3 material rather than tender European hazelnut.',nutritionText:'Dense calories, unsaturated fats, protein, vitamin E, magnesium and minerals—best long-term survival macro-food in the list.',support:['nut calories','native shrub','wind buffering','long lived'],risk:'Slow return, large footprint and wildlife competition. Nuts/drop zones do not belong next to main sidewalks.',bloom:'early',aggressive:false,appleRisk:0},
+ {id:'aronia',name:'Black chokeberry / aronia',latin:'Aronia melanocarpa',category:'berry',layer:'shrub',zone:'3',native:true,perennial:true,importance:79,ease:89,nutrition:96,hospital:84,time:24,height:'1.2–2 m',spread:'1.2–2 m',spacing:'1.2–1.8 m',germ:'Slow from seed; use potted/bare-root cultivars.',fruit:'Usually ~2–3 years from nursery stock.',harvest:'Late summer–fall; berries persist if birds allow.',plant:'Full sun for best fruit but tolerant of varied conditions. Place in outer ring with good airflow.',cost:'$20–45 per shrub.',buy:'Specialty fruit/native nurseries; ornamental aronia may still be edible but choose food-oriented stock for yield.',nutritionText:'Very high polyphenol/anthocyanin concentration; astringent raw, excellent for juice/blends/preserves.',support:['late fruit','pollinator','tough shrub','preserving'],risk:'Rosaceae relative of apple; maintain spacing/airflow and monitor fire blight susceptibility by cultivar/site.',bloom:'mid',aggressive:false,appleRisk:1},
+ {id:'squashberry',name:'Squashberry / lowbush cranberry',latin:'Viburnum edule',category:'berry',layer:'shrub',zone:'2',native:true,perennial:true,importance:78,ease:72,nutrition:86,hospital:76,time:30,height:'0.6–2 m',spread:'0.8–2 m',spacing:'1.2–2 m',germ:'Seed often needs warm + cold stratification and is slow; use nursery stock if possible.',fruit:'Commonly 2–4 years from young stock.',harvest:'Late summer–fall; flavour improves after cold for many viburnums.',plant:'Use an outer, moist-but-drained spot with sun/part shade. Native-plant sourcing is preferable.',cost:'$20–45+ depending on nursery size.',buy:'Native-plant nurseries; availability is less predictable than mainstream berries.',nutritionText:'Tart fruit used in preserves; vitamin C and polyphenols, with moderate yields.',support:['boreal native','wildlife','shrub diversity','late season'],risk:'Fruit identification matters: buy correctly labelled Viburnum edule; wildlife may take much of the crop.',bloom:'mid',aggressive:false,appleRisk:0},
+ {id:'buffaloberry',name:'Canada buffaloberry / soapberry',latin:'Shepherdia canadensis',category:'berry',layer:'large shrub',zone:'2',native:true,perennial:true,importance:73,ease:58,nutrition:85,hospital:28,time:36,height:'0.9–3.9 m',spread:'1–3 m+',spacing:'2–3 m+',germ:'Seed germination is difficult; container stock/root propagation is more reliable.',fruit:'Several years from young stock; male/female plants usually required for fruiting.',harvest:'Summer; tart/soapy berries traditionally processed.',plant:'Only consider in a separate restoration/perimeter bed. It fixes nitrogen via Frankia and tolerates nutrient-poor soils.',cost:'$20–50+ when available.',buy:'Native restoration nurseries; uncommon in mainstream retail.',nutritionText:'Fruit contains carotenoids and other phytochemicals; culturally significant traditional food, but not a high-volume fresh-eating berry.',support:['nitrogen fixer','native restoration','poor-soil tolerance','wildlife'],risk:'Low hospital fit: substantial wildlife attraction (including bears in its range), large footprint, difficult sourcing and public-food unfamiliarity.',bloom:'early',aggressive:true,appleRisk:0,nfix:true},
+ {id:'sunchoke',name:'Jerusalem artichoke / sunchoke',latin:'Helianthus tuberosus',category:'tuber',layer:'tall herb',zone:'3',native:true,perennial:true,importance:98,ease:96,nutrition:86,hospital:34,time:5,height:'1.5–3 m',spread:'Rapid rhizomatous colony',spacing:'30–35 cm plants; 60–100 cm rows',germ:'Grown from tubers, not seed; shoots emerge after spring soil warms.',fruit:'Tubers mature in ~130 days; harvest after frost or later in fall.',harvest:'Fall to early winter; tubers can overwinter in soil.',plant:'Plant tubers ~10 cm deep in a dedicated, contained bed. Never tuck into an apple root zone: harvesting requires digging and tiny missed tubers regrow.',cost:'$10–25 tuber pack; sometimes food-grade tubers can be sourced locally but planting stock is preferable.',buy:'Seed/tuber companies, specialty growers, sometimes farmers’ markets.',nutritionText:'Substantial carbohydrate as inulin, potassium, iron and fibre; valuable cold-climate calorie/diversity crop.',support:['survival calories','wind screen','pollinator flowers','extreme persistence'],risk:'Very aggressive and tall; excavation conflicts with apple roots. Perimeter/contained bed only.',bloom:'late',aggressive:true,appleRisk:0},
+ {id:'calendula',name:'Calendula / pot marigold',latin:'Calendula officinalis',category:'flower',layer:'annual herb',zone:'annual',native:false,perennial:false,importance:44,ease:98,nutrition:45,hospital:96,time:2,height:'0.25–0.6 m',spread:'0.2–0.4 m',spacing:'20–30 cm',germ:'7–14 days direct-sown in cool soil.',fruit:'Edible petals/flowers in ~45–60 days.',harvest:'Early summer until frost if deadheaded.',plant:'Direct sow shallowly in disturbed-free pockets or a separate annual strip. Excellent trial species because it is cheap and reversible.',cost:'$3–6 seed packet.',buy:'Almost any seed retailer/garden centre.',nutritionText:'Edible petals contribute carotenoid pigments but this is a garnish/tea plant, not a staple food.',support:['pollinator','fast flowers','cheap','reversible annual'],risk:'Low survival-food value; may self-seed modestly.',bloom:'late',aggressive:false,appleRisk:0},
+ {id:'anisehyssop',name:'Anise hyssop',latin:'Agastache foeniculum',category:'leaf',layer:'herb',zone:'3',native:true,perennial:true,importance:57,ease:90,nutrition:56,hospital:94,time:3,height:'0.6–1.2 m',spread:'0.4–0.7 m',spacing:'40–60 cm',germ:'10–30 days; cold-moist stratification can improve seed performance.',fruit:'Leaves can be harvested first season; abundant flowers once established.',harvest:'Leaves from early growth; flowers mid/late summer.',plant:'Full sun, well-drained soil. Place outside high-traffic door zones because it is a strong pollinator draw.',cost:'$4–8 seed; $10–20 pot.',buy:'Native/perennial nurseries and seed companies.',nutritionText:'Aromatic edible leaves/flowers for tea and seasoning; nutrition is secondary to pollinator function.',support:['pollinator bridge','native range','edible tea','low maintenance'],risk:'Very attractive to bees; place thoughtfully around healthcare entrances and seating.',bloom:'late',aggressive:false,appleRisk:0}
+];
+const presets=[
+ {name:'Hospital-safe core',ids:['chives','wildstrawberry','haskap','redcurrant'],desc:'Low thorns, high hardiness, small inner-ring disturbance + compact outer fruit.'},
+ {name:'Nutrition-first',ids:['blackcurrant','haskap','aronia','strawberry','chives'],desc:'High vitamin C/polyphenol diversity with multiple harvest windows.'},
+ {name:'Fast-return',ids:['chives','sorrel','calendula','strawberry','haskap'],desc:'Edible leaves/flowers in weeks to months plus early berry return.'},
+ {name:'Native-forward',ids:['wildstrawberry','saskatoon','squashberry','hazelnut'],desc:'Boreal/prairie-native emphasis; requires more outer space.'},
+ {name:'Survival reserve',ids:['hazelnut','sunchoke','saskatoon','blackcurrant'],desc:'Calories + fats + preserving fruit. Keep sunchoke physically separate.'},
+ {name:'Pollinator bridge',ids:['haskap','chives','anisehyssop','calendula'],desc:'Early-to-late bloom succession with edible output; place flowers away from doors.'}
+];
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let selected; try{selected=new Set(JSON.parse(localStorage.getItem('fmAppleGuildSelection')||'[]'))}catch{selected=new Set()}
+let showOnlySelected=false, weightedMode=false;
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function harvestScore(m){return Math.max(0,100-Math.min(100,m*2));}
+function weighted(p){const w={importance:+$('#wSurv').value,ease:+$('#wEase').value,nutrition:+$('#wNut').value,time:+$('#wTime').value,hospital:+$('#wHosp').value}; const tot=Object.values(w).reduce((a,b)=>a+b,0)||1; return (p.importance*w.importance+p.ease*w.ease+p.nutrition*w.nutrition+harvestScore(p.time)*w.time+p.hospital*w.hospital)/tot;}
+function tier(p){const s=weighted(p);return s>=85?['A','badge-high']:s>=72?['B','badge-mid']:['C','badge-low']}
+function renderSpecies(){
+ const q=($('#search').value||'').toLowerCase(); const cats=new Set($$('.cat:checked').map(x=>x.value));
+ let list=species.filter(p=>cats.has(p.category)&&(!$('#hospitalOnly').checked||p.hospital>=75)&&(!$('#perennialOnly').checked||p.perennial)&&(!$('#nativeOnly').checked||p.native)&&(!showOnlySelected||selected.has(p.id)));
+ if(q) list=list.filter(p=>JSON.stringify(p).toLowerCase().includes(q));
+ const s=$('#sortBy').value,d=$('#sortDir').value; if(weightedMode){list.sort((a,b)=>weighted(b)-weighted(a))}else{list.sort((a,b)=>{let A=s==='name'?a.name:s==='time'?a.time:a[s];let B=s==='name'?b.name:s==='time'?b.time:b[s]; if(typeof A==='string') return d==='asc'?A.localeCompare(B):B.localeCompare(A);return d==='asc'?A-B:B-A})};
+ $('#resultCount').textContent=`${list.length} of ${species.length}`; $('#metricSpecies').textContent=species.length;
+ $('#speciesGrid').innerHTML=list.map(p=>{const [t,tc]=tier(p);return `<article class="species" data-id="${p.id}"><div class="species-head"><div><h3>${esc(p.name)}</h3><div class="latin">${esc(p.latin)}</div></div><span class="rank ${tc}" title="Weighted tier">Tier ${t}</span></div><div class="scoreline">
+ <div class="score"><b>${p.importance}</b><span>survival</span><div class="bar"><i style="width:${p.importance}%"></i></div></div><div class="score"><b>${p.ease}</b><span>ease</span><div class="bar"><i style="width:${p.ease}%"></i></div></div><div class="score"><b>${p.nutrition}</b><span>nutrition</span><div class="bar"><i style="width:${p.nutrition}%"></i></div></div><div class="score"><b>${p.time}m</b><span>first harvest</span><div class="bar"><i style="width:${harvestScore(p.time)}%"></i></div></div></div>
+ <div class="tags"><span class="tag">${p.category}</span><span class="tag">zone ${p.zone}</span><span class="tag">${p.layer}</span><span class="tag">hospital ${p.hospital}</span>${p.native?'<span class="tag">native/range</span>':''}${p.perennial?'<span class="tag">perennial</span>':'<span class="tag">annual</span>'}</div>
+ <details><summary>Planting, timing, nutrition, cost & cautions</summary><div class="detail"><div><strong>Best planting method</strong><p>${esc(p.plant)}</p></div><div><strong>Germination / establishment</strong><p>${esc(p.germ)}</p></div><div><strong>First fruiting / edible yield</strong><p>${esc(p.fruit)} ${esc(p.harvest)}</p></div><div><strong>Mature dimensions</strong><p>Height ${esc(p.height)} · spread ${esc(p.spread)} · spacing ${esc(p.spacing)}</p></div><div><strong>Nutrition</strong><p>${esc(p.nutritionText)}</p></div><div><strong>Apple-guild roles</strong><p>${p.support.map(esc).join(' · ')}</p></div><div><strong>Cost & where to buy</strong><p>${esc(p.cost)} ${esc(p.buy)}</p></div><div><strong>Important caution</strong><p>${esc(p.risk)}</p></div></div></details>
+ <div class="selectrow"><button data-select="${p.id}" class="${selected.has(p.id)?'selected':''}">${selected.has(p.id)?'✓ In guild':'+ Add to guild'}</button></div></article>`}).join('') || '<div class="callout">No species match the current filters.</div>';
+ $$('[data-select]').forEach(b=>b.addEventListener('click',()=>toggleSelected(b.dataset.select)));
+ updateLab();
+}
+function toggleSelected(id){selected.has(id)?selected.delete(id):selected.add(id);localStorage.setItem('fmAppleGuildSelection',JSON.stringify([...selected]));renderSpecies();renderMatrix();}
+function compatibility(a,b){if(a.id===b.id)return null;let score=0; if((a.layer==='groundcover'||a.layer==='herb')&&(b.layer.includes('shrub')||b.layer==='cane shrub'||b.layer==='large shrub'))score+=2; if((b.layer==='groundcover'||b.layer==='herb')&&(a.layer.includes('shrub')||a.layer==='cane shrub'||a.layer==='large shrub'))score+=2; if(a.bloom!==b.bloom)score+=1; if(a.nfix||b.nfix)score+=1; if(a.aggressive&&b.aggressive)score-=2; if(a.layer==='large shrub'&&b.layer==='large shrub')score-=1; if((a.id==='sunchoke'||b.id==='sunchoke')&&!['calendula','anisehyssop'].includes(a.id)&&!['calendula','anisehyssop'].includes(b.id))score-=1; if((a.hospital<50&&b.hospital<70)||(b.hospital<50&&a.hospital<70))score-=1; return Math.max(-2,Math.min(2,score));}
+function renderMatrix(){const arr=species.filter(p=>selected.has(p.id)).slice(0,8), h=$('#matrixHolder');if(arr.length<2){h.innerHTML='<div style="padding:16px;color:var(--muted)">Select 2–8 species to generate a useful pairwise matrix.</div>';return}const cls=s=>s===2?'sy2':s===1?'sy1':s===-1?'sym1':s===-2?'sym2':'sy0'; h.innerHTML=`<table class="matrix"><thead><tr><th class="namecell">Species</th>${arr.map(p=>`<th>${esc(p.name.split('—')[0])}</th>`).join('')}</tr></thead><tbody>${arr.map(a=>`<tr><th class="namecell">${esc(a.name)}</th>${arr.map(b=>{const s=compatibility(a,b);return `<td class="${s===null?'':cls(s)}">${s===null?'—':s>0?'+'+s:s}</td>`}).join('')}</tr>`).join('')}</tbody></table>`;}
+function updateLab(){const arr=species.filter(p=>selected.has(p.id));$('#selCount').textContent=arr.length; const score=arr.length?arr.reduce((s,p)=>s+weighted(p),0)/arr.length:null; $('#guildScore').textContent=score?score.toFixed(0):'—'; $('#selectedList').innerHTML=arr.length?arr.map(p=>`<div class="sel-item"><span>${esc(p.name)}</span><button aria-label="Remove ${esc(p.name)}" data-remove="${p.id}" style="border:0;background:none;color:var(--muted)">×</button></div>`).join(''):'<p>No species selected yet.</p>'; $$('[data-remove]').forEach(b=>b.onclick=()=>toggleSelected(b.dataset.remove));
+ const warns=[]; if(arr.some(p=>p.id==='sunchoke'))warns.push('Sunchoke: use a contained separate bed; harvesting disturbs roots.'); if(arr.some(p=>p.id==='buffaloberry'))warns.push('Buffaloberry: poor near entrances/paths; high wildlife value and large footprint.'); if(arr.filter(p=>p.aggressive).length>1)warns.push('Multiple spreading species selected: add physical separation/maintenance zones.'); if(arr.filter(p=>p.appleRisk).length>1)warns.push('Several Rosaceae relatives selected: maintain airflow and monitor shared disease pressure.'); if(arr.some(p=>p.id==='rhubarb'))warns.push('Rhubarb leaves are toxic if eaten; assess public-access suitability.'); $('#guildWarnings').innerHTML=warns.map(w=>`<div class="warning">⚠ ${esc(w)}</div>`).join('');
+}
+function renderPresets(){$('#presetGrid').innerHTML=presets.map((p,i)=>`<div class="preset"><h4>${esc(p.name)}</h4><p>${esc(p.desc)}</p><button data-preset="${i}">Load preset</button></div>`).join('');$$('[data-preset]').forEach(b=>b.onclick=()=>{selected=new Set(presets[+b.dataset.preset].ids);localStorage.setItem('fmAppleGuildSelection',JSON.stringify([...selected]));renderSpecies();renderMatrix();});}
+function resetFilters(){$('#search').value='';if($('#mobileSearch'))$('#mobileSearch').value='';$$('.cat').forEach(c=>c.checked=true);$('#hospitalOnly').checked=$('#perennialOnly').checked=$('#nativeOnly').checked=false;showOnlySelected=false;weightedMode=false;$('#sortBy').value='importance';$('#sortDir').value='desc';renderSpecies();}
+function makeParticles(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return; const holder=$('#particles');for(let i=0;i<22;i++){let s=document.createElement('i');s.className='particle'+(i%6===0?' apple':'');s.style.left=(Math.random()*100)+'vw';s.style.top=(-10-Math.random()*90)+'vh';s.style.animationDuration=(12+Math.random()*18)+'s';s.style.animationDelay=(-Math.random()*20)+'s';holder.appendChild(s)}}
+function exportPlan(){const payload={schema:'fm-apple-guild/v1',exported:new Date().toISOString(),selected:[...selected],weights:{survival:+$('#wSurv').value,ease:+$('#wEase').value,nutrition:+$('#wNut').value,time:+$('#wTime').value,hospital:+$('#wHosp').value},notes:'Planning aid only; obtain property approval before planting.'};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='fort-mcmurray-apple-guild-plan.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function importPlan(file){const r=new FileReader();r.onload=()=>{try{const x=JSON.parse(r.result);if(x.schema!=='fm-apple-guild/v1'||!Array.isArray(x.selected))throw Error('Not a compatible plan');selected=new Set(x.selected.filter(id=>species.some(p=>p.id===id)));if(x.weights){[['wSurv','survival'],['wEase','ease'],['wNut','nutrition'],['wTime','time'],['wHosp','hospital']].forEach(([id,k])=>{if(Number.isFinite(+x.weights[k]))$('#'+id).value=Math.max(0,Math.min(50,+x.weights[k]))})}localStorage.setItem('fmAppleGuildSelection',JSON.stringify([...selected]));weightsChanged();renderMatrix();}catch(e){alert('Could not import: '+e.message)}};r.readAsText(file)}
+function weightsChanged(){[['wSurv','wSurvOut'],['wEase','wEaseOut'],['wNut','wNutOut'],['wTime','wTimeOut'],['wHosp','wHospOut']].forEach(([i,o])=>$('#'+o).value=$('#'+i).value);renderSpecies()}
+function closeSplash(){const s=$('#splash');s.classList.add('splash-hidden');setTimeout(()=>s.style.display='none',600)}
+$('#enterBtn').onclick=closeSplash;setTimeout(()=>{if(!$('#splash').classList.contains('splash-hidden'))closeSplash()},3600);
+$('#themeBtn').onclick=()=>{const next=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=next;localStorage.setItem('fmAppleGuildTheme',next)};document.documentElement.dataset.theme=localStorage.getItem('fmAppleGuildTheme')||'dark';
+$('#search').addEventListener('input',()=>{if($('#mobileSearch'))$('#mobileSearch').value=$('#search').value;renderSpecies()});if($('#mobileSearch'))$('#mobileSearch').addEventListener('input',()=>{$('#search').value=$('#mobileSearch').value;renderSpecies()});$('#sortBy').onchange=()=>{weightedMode=false;renderSpecies()};$('#sortDir').onchange=()=>{weightedMode=false;renderSpecies()};$$('.cat,#hospitalOnly,#perennialOnly,#nativeOnly').forEach(x=>x.onchange=renderSpecies);$('#resetFilters').onclick=resetFilters;$('#weightedSort').onclick=()=>{weightedMode=true;renderSpecies()};
+['wSurv','wEase','wNut','wTime','wHosp'].forEach(id=>$('#'+id).oninput=weightsChanged);$('#clearSelection').onclick=()=>{selected.clear();localStorage.setItem('fmAppleGuildSelection','[]');renderSpecies();renderMatrix()};
+$('#toTop').onclick=()=>scrollTo({top:0,behavior:'smooth'});$('#showSelected').onclick=()=>{showOnlySelected=!showOnlySelected;renderSpecies();location.hash='catalog'};$('#printBtn').onclick=()=>print();$('#exportBtn').onclick=exportPlan;$('#importBtn').onclick=()=>$('#importFile').click();$('#importFile').onchange=e=>e.target.files[0]&&importPlan(e.target.files[0]);
+$('#leftToggle').onclick=()=>$('#leftbar').classList.toggle('open');$('#rightToggle').onclick=()=>$('#rightbar').classList.toggle('open');$$('.leftbar a').forEach(a=>a.onclick=()=>$('#leftbar').classList.remove('open'));
+makeParticles();renderPresets();weightsChanged();renderMatrix();
+</script>
+<!-- =====================================================================
+ COMMONS COMPASS (left menu) + CONTRIBUTION PATHWAY (right menu)  -  add-on block
+ HOW TO USE: paste this whole file into your index.html, right before </body>
+ and AFTER the existing <script>. It rebuilds both side menus when the page loads.
+ Nothing else in your planner changes. Everything runs offline, on this device.
+ ===================================================================== -->
+<style id="collab-css">
+/* 1. Wider menus on large screens only (small screens keep your original sizes) */
+@media(min-width:1181px){:root{--left-w:280px;--right-w:356px}}
+/* 2. Light theme repair: the original bars stayed dark in light mode */
+[data-theme="light"] .topbar,[data-theme="light"] .bottom,[data-theme="light"] .leftbar,[data-theme="light"] .rightbar{background:rgba(255,255,255,.86)}
+.select option{background:var(--bg2);color:var(--text)}
+/* 3. Aero-glass cards: soft light, depth, a slow specular sheen on hover */
+.cx{position:relative;overflow:hidden;margin:0 0 14px;padding:12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.02));backdrop-filter:blur(10px) saturate(1.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 26px rgba(0,0,0,.22)}
+.cx:after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;pointer-events:none;background:linear-gradient(100deg,transparent,rgba(255,255,255,.12),transparent);transform:skewX(-18deg);transition:left .9s}
+.cx:hover:after{left:130%}
+.cx h4{margin:0 0 8px;font-size:.84rem;color:var(--accent)}
+.note{display:block;margin:6px 0 0;font-size:.74rem;color:var(--muted);line-height:1.45}
+/* 4. Chips: roles and lenses */
+.chips{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chip{display:flex;flex-direction:column;gap:3px;align-items:flex-start;text-align:left;padding:8px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);color:var(--text);transition:transform .2s,border-color .3s,background .3s,box-shadow .3s}
+.chip small{font-size:.68rem;color:var(--muted)}.chip:hover{transform:translateY(-1px)}
+.chip[aria-pressed=true]{border-color:var(--accent);background:rgba(115,231,152,.14);box-shadow:0 0 22px rgba(115,231,152,.2);animation:pop .4s}
+.chip.gap[aria-pressed=true]{animation:gap 2.2s infinite}
+.cov{display:block;height:4px;width:100%;border-radius:9px;background:rgba(255,255,255,.1);overflow:hidden}
+.cov i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--sky));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+/* 5. Pathway: progress ring, step cards, role lights, offer card */
+.pathhead{display:flex;gap:12px;align-items:center;margin-bottom:6px}.pathhead b{display:block;font-size:.95rem}
+.ring{width:74px;height:74px;flex:none}.ring circle{fill:none;stroke-width:7;stroke-linecap:round}.ring .t{stroke:rgba(255,255,255,.12)}
+.ring .v{stroke:var(--accent);stroke-dasharray:201;stroke-dashoffset:201;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px var(--accent))}
+.step{display:grid;grid-template-columns:auto 1fr;gap:9px;margin:7px 0;padding:9px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.04);animation:rise .5s both;animation-delay:calc(var(--i)*70ms)}
+.step input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+.step b{display:block;font-size:.86rem}.step p{margin:4px 0;font-size:.79rem}
+.step.done{border-color:var(--accent);opacity:.7}.step.done b{text-decoration:line-through}
+.meta{display:flex;flex-wrap:wrap;gap:6px;font-size:.68rem;color:var(--muted)}.star{color:var(--accent2)}
+.step summary,details.fine summary{cursor:pointer;color:var(--sky);font-size:.76rem;margin-top:4px}details.fine{margin:10px 0}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.roles span{padding:7px 2px;border:1px solid var(--line);border-radius:11px;font-size:1.1rem;opacity:.5;transition:all .5s}
+.roles small{display:block;font-size:.58rem;color:var(--muted)}.roles .lit{opacity:1;border-color:var(--accent);box-shadow:0 0 18px rgba(115,231,152,.3)}
+.offer{margin:8px 0;padding:9px;max-height:150px;overflow:auto;white-space:pre-wrap;font:.72rem/1.45 ui-monospace,Menlo,Consolas,monospace;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.2);color:var(--text)}
+.btnrow{display:flex;gap:6px}.btnrow button{flex:1}
+.rail a[aria-current]{background:rgba(145,237,174,.14);box-shadow:inset 3px 0 0 var(--accent)}
+/* 6. Motion FX layers: drifting light motes, a signal line between the menus, particle bursts */
+#motes{position:fixed;inset:0;z-index:-1;pointer-events:none}
+#thread{position:fixed;top:var(--top-h);left:0;right:0;height:3px;z-index:99;pointer-events:none;opacity:0;background:linear-gradient(90deg,transparent,var(--accent),var(--sky),var(--accent2),transparent);box-shadow:0 0 14px var(--accent)}
+#thread.go{animation:sweep 1.1s ease-out}#thread.back{animation:sweepB 1.1s ease-out}
+#fx{position:fixed;inset:0;z-index:900;pointer-events:none}#fx span{position:absolute;font-size:16px}
+.pulse{animation:glow .9s}
+@keyframes pop{0%{transform:scale(.94)}60%{transform:scale(1.04)}100%{transform:scale(1)}}
+@keyframes gap{0%,100%{border-color:var(--accent)}50%{border-color:var(--accent2);box-shadow:0 0 18px rgba(255,199,107,.35)}}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+@keyframes glow{0%,100%{box-shadow:inset 0 0 0 rgba(145,237,174,0)}40%{box-shadow:inset 0 0 42px rgba(145,237,174,.3)}}
+@keyframes sweep{0%{opacity:1;clip-path:inset(0 100% 0 0)}55%{opacity:1;clip-path:inset(0)}100%{opacity:0;clip-path:inset(0 0 0 100%)}}
+@keyframes sweepB{0%{opacity:1;clip-path:inset(0 0 0 100%)}55%{opacity:1;clip-path:inset(0)}100%{opacity:0;clip-path:inset(0 100% 0 0)}}
+@media print{#motes,#thread,#fx{display:none!important}}
+</style>
+
+<script>
+(function(){
+'use strict';
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const L=$('#leftbar'),R=$('#rightbar');
+// Safety check: if this block is not inside the planner page, show a hint and stop quietly.
+if(!L||!R||typeof updateLab!=='function'||typeof weightsChanged!=='function'){
+  addEventListener('DOMContentLoaded',()=>document.body.insertAdjacentHTML('afterbegin','<p style="font:16px system-ui;padding:24px;max-width:60ch">This is an add-on block. Paste it into the planner index.html just before &lt;/body&gt;.</p>'));
+  return;
+}
+const KEY='fmAppleGuildCollab',RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const esc=s=>String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+/* ---------- A. CONTENT: edit these lists to adapt the menus ---------- */
+// Roles: icon, name, short description
+const ROLES={i:['🌱','Individual','Neighbour or visitor'],f:['🏡','Family','Carers, kids, elders'],p:['🛏️','Patient','Resting or recovering'],w:['🩺','Hospital worker','Any department']};
+const NOTE={i:'Neighbours and visitors can observe, share ideas and back approved work.',f:'Families can start with gentle, low-disturbance rituals and stories.',p:'Rest counts as contributing. Check with your care team before anything physical.',w:'Each discipline sees a different risk and a different gift. Together you see the whole tree.'};
+const DISC={g:'Grounds & facilities',n:'Nutrition & food services',c:'Clinical & therapy',s:'Safety, infection & admin'};
+const TL={15:'up to 15 min',30:'up to 30 min',60:'up to 1 hour',180:'half a day'},AL=['seated or bedside','light standing & carrying','can lift & dig (with approval)'];
+// Lenses: each steers one weight slider in the Combination Lab (w) and decides which species "cover" it (t)
+const LENS={
+ ecology:{i:'🌿',n:'Ecology',w:'wSurv',d:'Native, pollinator and wildlife value',t:p=>p.native||p.support.some(s=>/pollinator|wildlife|native/.test(s))},
+ nutrition:{i:'🍓',n:'Nutrition',w:'wNut',d:'Nutrient-dense food plants',t:p=>p.nutrition>=85},
+ healing:{i:'🫶',n:'Healing',w:'wEase',d:'Calm, gentle, easy-care plants',t:p=>p.hospital>=85&&p.ease>=85},
+ safety:{i:'🛡️',n:'Safety',w:'wHosp',d:'Low-risk plants for public healthcare ground',t:p=>p.hospital>=75&&!p.aggressive},
+ peace:{i:'🕊️',n:'Peace',w:'wSurv',d:'Shareable, long-lived plants that welcome everyone',t:p=>p.perennial&&p.ease>=85},
+ learning:{i:'📚',n:'Learning',w:'wTime',d:'Quick wins you can learn from in one season',t:p=>p.time<=5}
+};
+// Steps: [id, roles (i f p w), worker disciplines (g n c s; blank = all), lens, minutes, ability 0-2, title, simple how, deeper guide, species that make it fit]
+const STEPS=[
+["look","ifpw","","learning",10,0,"Watch one apple tree for 10 minutes","Notice flowers, leaves, insects and birds. A bench or a window is enough.","Repeat weekly and jot the date, bloom stage and visitors. A season of notes becomes baseline data the guild team can use.",""],
+["calm","fp","","healing",10,0,"Take a five-senses pause","Name one thing you see, hear, smell and feel that calms you. No touching or tasting needed.","Tell your care team or the volunteer office what helped. Calm-view and seating feedback supports the case for benches and sensory planting.","chives,anisehyssop"],
+["story","ifpw","","peace",15,0,"Share a story or drawing","Draw or write what the trees mean to you. Leave out names and health details.","Collect notes only with consent and anonymised, then offer them to the volunteer office as a story-wall proposal.",""],
+["circle","ifpw","","peace",30,0,"Join or host a listening circle","Twenty calm minutes across roles about what would make the grounds kinder and safer.","One voice at a time, a right to pass, no advice-giving and no recording. Share themes only, never who said what.",""],
+["ask","ifw","gs","safety",30,0,"Send a respectful approval request","Ask the property manager or volunteer office who decides about planting and harvest.","Include the location, who will maintain it, a short species list, the 0.6 m no-dig trunk buffer and a one-season trial. Do not plant before written approval.",""],
+["soil","ifw","gs","ecology",60,1,"Order a soil test first","Check pH, organic matter, salts and contaminants before choosing species.","Use an accredited lab and sample several spots at 0 to 15 cm. If the bed history is unknown, include contaminants.",""],
+["plug","ifw","g","ecology",60,1,"Plant small plugs, not big holes","With approval, tuck chive or strawberry plugs into sunny gaps at least 0.6 m from the trunk.","Hand tools only, no rototilling, light mulch, water through year one, then record survival and sun. Watch a full winter before adding more.","chives,wildstrawberry,strawberry"],
+["mulch","ifw","g","ecology",60,2,"Refresh the mulch ring","Add a thin ring of clean wood chips and keep the trunk flare clear.","About 5 to 8 cm deep and 15 cm off the bark, from a chemical-free source. Ask infection prevention first near patient windows, since mulch can carry mould.",""],
+["map","w","g","safety",30,1,"Map salt, snow piles and utilities","Mark where snow is dumped, de-icer lands and lines run before anyone digs.","Request utility locates, note irrigation and test soil salinity where road salt is likely. Share the map with the whole team.",""],
+["drop","ifw","g","safety",20,1,"Set a weekly fallen-fruit check","Clear dropped fruit from paths so slips and wildlife stay away from entrances.","Bag waste, rotate volunteers and follow local wildlife guidance. Keep nuts and berries away from doors.","haskap,saskatoon,aronia"],
+["blight","ifw","g","learning",20,0,"Learn one fire-blight sign","Blackened, hooked shoot tips on apple or its relatives can mean fire blight. Report it, do not prune it.","Tell facilities or an arborist. Prune only in dry dormant weather, cut well below the damage and clean tools between cuts.","saskatoon,aronia"],
+["diet","w","n","nutrition",45,0,"Review diet and allergy fit","Flag plants that could clash with common diets or allergies.","Ask pharmacy and dietitians about vitamin K (chives) and oxalate (sorrel). Add allergen cards to any approved tasting.","chives,sorrel,blackcurrant"],
+["taste","w","n","nutrition",60,0,"Design an approved tasting table","Only after sign-off, plan a small hand-washed tasting with tested produce.","Follow food-safety policy, never serve unapproved or foraged fruit, label every item and keep it clear of sidewalks.","haskap,strawberry"],
+["break","w","c","healing",15,0,"Offer a five-minute outdoor break","Where care plans allow, invite staff and ambulatory patients outside together.","Keep to accessible paths with seating. If you gather feedback, make it anonymous, optional and consented.",""],
+["access","w","cs","safety",30,1,"Check paths, seating and fall risks","Walk the route like a wheelchair user: slip risks, turning space, shade and rest points.","Fallen fruit, canes and roots are trip hazards. Report to facilities and keep entrances and ambulance routes clear.",""],
+["ipc","w","s","safety",30,0,"Run an infection-prevention check","Decide who may touch soil, mulch or fresh plants, and who should not.","Immunocompromised units may need window views only. Use washable containers and keep compost away from patient areas.",""]
+].map(([id,r,d,l,m,a,t,h,g,sp])=>({id,r,d,l,m,a,t,h,g,sp:sp?sp.split(','):[]}));
+
+/* ---------- B. MARKUP: new sections slotted into the existing side panels ---------- */
+const LEFT_HTML=`
+<section class="cx" aria-labelledby="cxW"><h4 id="cxW">① Who is contributing?</h4>
+ <div class="chips" id="roleChips" role="group" aria-label="Choose your role"></div>
+ <label class="sr-only" for="discSel">Hospital discipline</label>
+ <select id="discSel" class="select" style="margin-top:8px" hidden><option value="g">Grounds &amp; facilities</option><option value="n">Nutrition &amp; food services</option><option value="c">Clinical &amp; therapy</option><option value="s">Safety, infection &amp; admin</option></select>
+ <p class="note" id="roleNote"></p></section>
+<section class="cx" aria-labelledby="cxC"><h4 id="cxC">② What can you give?</h4>
+ <label class="note" for="timeSel">Time I have</label>
+ <select id="timeSel" class="select"><option value="15">Up to 15 minutes</option><option value="30">Up to 30 minutes</option><option value="60">Up to 1 hour</option><option value="180">Half a day</option></select>
+ <label class="note" for="abilSel">How I can help</label>
+ <select id="abilSel" class="select"><option value="0">Seated or bedside</option><option value="1">Light standing &amp; carrying</option><option value="2">Can lift &amp; dig (with approval)</option></select></section>
+<section class="cx" aria-labelledby="cxL"><h4 id="cxL">③ Which lenses matter?</h4>
+ <div class="chips" id="lensChips" role="group" aria-label="Choose lenses"></div>
+ <p class="note">Tap to include or skip a lens. Each bar fills as your guild shortlist and ticked steps (right menu) cover it. A pulsing outline marks a gap.</p></section>`;
+const RIGHT_HTML=`
+<section class="cx" aria-labelledby="cxP">
+ <div class="pathhead"><svg class="ring" viewBox="0 0 74 74" role="img" aria-label="Pathway progress"><circle class="t" cx="37" cy="37" r="32"/><circle class="v" id="ringV" cx="37" cy="37" r="32"/></svg>
+ <div><h4 id="cxP">Your pathway</h4><b id="pathTitle"></b><span class="note" id="pathSub"></span></div></div>
+ <div id="stepList"></div><button class="iconbtn" id="stepMore" style="width:100%;margin-top:6px" hidden></button></section>
+<section class="cx" aria-labelledby="cxT"><h4 id="cxT">Roles at the table</h4><div class="roles" id="rolesRow"></div>
+ <p class="note">A role lights up when one of its steps is ticked on this device. Switch roles on the left to walk every pathway.</p></section>
+<section class="cx" aria-labelledby="cxO"><h4 id="cxO">Your contribution offer</h4>
+ <label class="note" for="noteIn">One kind line. No names, contacts or health details.</label>
+ <input id="noteIn" class="select" maxlength="140" placeholder="e.g. I can help on Saturday mornings" autocomplete="off">
+ <pre class="offer" id="offerPre" tabindex="0"></pre>
+ <div class="btnrow"><button class="iconbtn" id="copyOffer">Copy</button><button class="iconbtn" id="saveOffer">Download .txt</button></div>
+ <p class="note">Built on this device only. Share it with the volunteer office or property manager if and when you choose. Future extension: merging several offers into one team map.</p></section>
+<button class="iconbtn" id="resetPath" style="width:100%;margin-bottom:14px">Reset my pathway and offer</button>`;
+const FOOT_HTML=`<footer class="section panel" id="zeroHarm"><h2>Zero Harm &amp; Anti-Coercion</h2><p>Every step here is an invitation, never a duty. Nobody is ranked, scored or compared, and resting counts as contributing. Nothing is planted, picked or eaten without property-owner and care-team approval. This page has no accounts, analytics or network calls; your role, choices and ticked steps stay in this browser and “Reset my pathway” erases them. Please keep names, contact details and health information out of every field.</p></footer>`;
+
+/* ---------- C. BUILD: wire the markup into the page ---------- */
+const nav=L.querySelector('nav.rail');
+nav.insertAdjacentHTML('beforeend','<a href="#zeroHarm">Zero Harm note</a>');
+nav.lastElementChild.onclick=()=>L.classList.remove('open');
+nav.insertAdjacentHTML('afterend',LEFT_HTML);
+// Keep the original filters (still working) but tuck them into a collapsible group
+const fg=$$('.leftbar .filter-group').filter(x=>!x.classList.contains('mobile-only')),fd=document.createElement('details');
+fd.className='fine';fd.innerHTML='<summary>Fine filters and food types</summary>';fg[0].before(fd);fg.forEach(x=>fd.appendChild(x));fd.appendChild($('#resetFilters'));
+R.querySelector('h3').insertAdjacentHTML('beforebegin',RIGHT_HTML);
+const wd=document.createElement('details'),wt=R.querySelector('.weights');
+wd.className='fine';wd.innerHTML='<summary>Fine-tune weights</summary>';wt.before(wd);wd.appendChild(wt);
+$('main').insertAdjacentHTML('beforeend',FOOT_HTML);
+document.body.insertAdjacentHTML('beforeend','<canvas id="motes" aria-hidden="true"></canvas><div id="thread" aria-hidden="true"></div><div id="fx" aria-hidden="true"></div><div id="live" class="sr-only" aria-live="polite"></div>');
+$('#roleChips').innerHTML=Object.entries(ROLES).map(([k,[ic,n,d]])=>`<button class="chip" data-role="${k}"><span>${ic} <b>${n}</b></span><small>${d}</small></button>`).join('');
+$('#lensChips').innerHTML=Object.entries(LENS).map(([k,l])=>`<button class="chip" data-lens="${k}" title="${l.d}"><span>${l.i} <b>${l.n}</b></span><span class="cov"><i></i></span></button>`).join('');
+$('#rolesRow').innerHTML=Object.entries(ROLES).map(([k,[ic,n]])=>`<span data-r="${k}" title="${n}">${ic}<small>${n.split(' ')[0]}</small></span>`).join('');
+
+/* ---------- D. STATE: stored only in this browser; "Reset" erases it ---------- */
+const fresh=()=>({role:'i',disc:'g',time:30,abil:1,lens:{ecology:1,nutrition:1,healing:1,safety:1,peace:1,learning:1},done:{},note:''});
+let S=fresh(),saved=false,sig='',cur=[],all=false,energy=0;
+try{const j=localStorage.getItem(KEY);if(j){S=Object.assign(fresh(),JSON.parse(j));saved=true}}catch(e){}
+if(!ROLES[S.role]||!DISC[S.disc])S=fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const say=m=>{$('#live').textContent=m};
+
+/* ---------- E. PAINTING: each function redraws one part when something changes ---------- */
+const sel=()=>species.filter(p=>selected.has(p.id));
+const cov=k=>Math.min(100,sel().filter(LENS[k].t).length*25+STEPS.filter(s=>s.l===k&&S.done[s.id]).length*35);
+const steps=()=>STEPS.filter(s=>s.r.includes(S.role)&&(S.role!=='w'||!s.d||s.d.includes(S.disc))&&S.lens[s.l]&&s.m<=S.time&&s.a<=S.abil)
+  .map(s=>({...s,star:s.sp.some(x=>selected.has(x))})).sort((a,b)=>b.star-a.star||a.m-b.m);
+function paintLeft(){ // left menu reflects the saved choices
+  $$('#roleChips .chip').forEach(b=>b.setAttribute('aria-pressed',b.dataset.role===S.role));
+  $('#discSel').hidden=S.role!=='w';$('#discSel').value=S.disc;$('#timeSel').value=S.time;$('#abilSel').value=S.abil;$('#roleNote').textContent=NOTE[S.role];
+}
+function paintLens(){ // RIGHT -> LEFT: coverage bars fill from shortlisted species and ticked steps
+  const any=selected.size>0||Object.keys(S.done).length>0;
+  $$('#lensChips .chip').forEach(b=>{const k=b.dataset.lens,c=cov(k),on=!!S.lens[k];
+    b.setAttribute('aria-pressed',on);b.classList.toggle('gap',on&&any&&c===0);b.querySelector('i').style.width=c+'%'});
+}
+function paintSteps(){ // LEFT -> RIGHT: the pathway is rebuilt for role, time, ability, lenses and shortlist
+  cur=steps();const v=all?cur:cur.slice(0,7);
+  $('#stepList').innerHTML=v.map((s,i)=>`<div class="step${S.done[s.id]?' done':''}" style="--i:${i}"><input type="checkbox" data-step="${s.id}" aria-label="Done: ${esc(s.t)}"${S.done[s.id]?' checked':''}><div><b>${LENS[s.l].i} ${esc(s.t)}</b><p>${esc(s.h)}</p><div class="meta"><span>⏱ ${s.m} min</span><span>${LENS[s.l].n}</span>${s.star?'<span class="star">★ fits your guild</span>':''}</div><details><summary>Go deeper</summary><p>${esc(s.g)}</p></details></div></div>`).join('')||'<p class="note">Nothing fits these settings yet. Add time, ability or a lens on the left.</p>';
+  const m=$('#stepMore');m.hidden=cur.length<=7;m.textContent=all?'Show fewer steps':`Show all ${cur.length} steps`;
+}
+function paintProgress(){
+  const n=cur.length,d=cur.filter(s=>S.done[s.id]).length;
+  $('#ringV').style.strokeDashoffset=201*(1-(n?d/n:0));
+  $('#pathTitle').textContent=ROLES[S.role][1]+(S.role==='w'?' · '+DISC[S.disc]:'');
+  $('#pathSub').textContent=`${d} of ${n} steps · ${TL[S.time]}`;
+}
+const paintRoles=()=>$$('#rolesRow span').forEach(e=>e.classList.toggle('lit',STEPS.some(s=>S.done[s.id]&&s.r.includes(e.dataset.r))));
+function offerText(){
+  const lz=Object.keys(LENS).filter(k=>S.lens[k]).map(k=>LENS[k].n).join(', '),g=sel().map(p=>p.name.split(' / ')[0].split(' — ')[0]).join(', ')||'none yet',
+  d=STEPS.filter(s=>S.done[s.id]).map(s=>'• '+s.t).join('\n')||'• (none ticked yet)';
+  return `CONTRIBUTION OFFER - Fort McMurray Hospital Apple Guild\nRole: ${ROLES[S.role][1]}${S.role==='w'?' · '+DISC[S.disc]:''}\nTime: ${TL[S.time]} · Help style: ${AL[S.abil]}\nLenses: ${lz}\nGuild shortlist: ${g}\nSteps I am taking:\n${d}\nNote: ${S.note||'-'}\nSafety: planning aid only. No planting, harvesting or eating without property-owner and care-team approval. Participation is voluntary.`;
+}
+const paintOffer=()=>{$('#offerPre').textContent=offerText()};
+function sync(){ // runs after every Combination Lab refresh, so the menus always agree
+  const k=JSON.stringify([S.role,S.disc,S.time,S.abil,S.lens,[...selected].sort()]);
+  if(k!==sig){sig=k;paintSteps()}
+  paintProgress();paintLens();paintRoles();paintOffer();
+}
+const _u=updateLab;updateLab=function(){_u();sync()}; // hook into the original lab
+
+/* ---------- F. MOTION: signal line, glow, particle burst ---------- */
+const sweep=d=>{const t=$('#thread');t.className='';void t.offsetWidth;t.className=d};
+const pulse=e=>{e.classList.remove('pulse');void e.offsetWidth;e.classList.add('pulse')};
+function burst(el,g){
+  energy=1;if(RM||!el.animate)return;const r=el.getBoundingClientRect(),f=$('#fx');
+  for(let k=0;k<10;k++){const s=document.createElement('span'),a=Math.random()*6.28,d=40+Math.random()*60;
+    s.textContent=g[k%g.length];s.style.left=r.left+r.width/2+'px';s.style.top=r.top+r.height/2+'px';f.appendChild(s);
+    s.animate([{transform:'translate(0,0) scale(.6)',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d-30}px) rotate(${Math.random()*360}deg) scale(1.1)`,opacity:0}],{duration:900+Math.random()*500,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>s.remove()}
+}
+
+/* ---------- G. LEFT -> RIGHT: your choices steer the Combination Lab ---------- */
+function steer(){
+  const W={wSurv:8,wEase:8,wNut:8,wTime:8,wHosp:8};
+  for(const k in LENS)if(S.lens[k])W[LENS[k].w]=Math.min(50,W[LENS[k].w]+(LENS[k].w==='wSurv'?14:26));
+  for(const id in W)$('#'+id).value=W[id];
+  $('#hospitalOnly').checked=S.role==='p'||S.abil===0; // gentlest, lowest-disturbance plants first
+  weightedMode=true;weightsChanged(); // original functions: re-rank catalog and refresh lab
+}
+function apply(msg){save();paintLeft();steer();sweep('go');pulse(R);say(msg)}
+$('#roleChips').onclick=e=>{const b=e.target.closest('[data-role]');if(!b)return;S.role=b.dataset.role;if(S.role==='p')S.abil=0;burst(b,['🍃','🍎','✨']);apply('Pathway updated for '+ROLES[S.role][1])};
+$('#discSel').onchange=e=>{S.disc=e.target.value;apply('Discipline set to '+DISC[S.disc])};
+$('#timeSel').onchange=e=>{S.time=+e.target.value;apply('Time set to '+TL[S.time])};
+$('#abilSel').onchange=e=>{S.abil=+e.target.value;apply('Help style set to '+AL[S.abil])};
+$('#lensChips').onclick=e=>{const b=e.target.closest('[data-lens]');if(!b)return;const k=b.dataset.lens;
+  if(S.lens[k]&&Object.values(S.lens).filter(Boolean).length===1)return say('Keep at least one lens on.');
+  S.lens[k]=S.lens[k]?0:1;burst(b,[LENS[k].i]);apply(LENS[k].n+(S.lens[k]?' lens on':' lens off'))};
+
+/* ---------- H. RIGHT -> LEFT: ticked steps light up the left menu ---------- */
+$('#stepList').onchange=e=>{const c=e.target.closest('[data-step]');if(!c)return;
+  if(c.checked)S.done[c.dataset.step]=1;else delete S.done[c.dataset.step];
+  save();c.closest('.step').classList.toggle('done',c.checked);
+  if(c.checked)burst(c,['🍎','🌿','✨']);
+  sweep('back');pulse(L);paintProgress();paintLens();paintRoles();paintOffer();say(c.checked?'Step done':'Step unticked')};
+$('#stepMore').onclick=()=>{all=!all;paintSteps()};
+$('#noteIn').value=S.note;
+$('#noteIn').oninput=e=>{S.note=e.target.value.slice(0,140);save();paintOffer()};
+$('#copyOffer').onclick=async()=>{try{await navigator.clipboard.writeText(offerText());say('Offer copied')}catch(e){
+  const r=document.createRange();r.selectNodeContents($('#offerPre'));const s=getSelection();s.removeAllRanges();s.addRange(r);say('Text highlighted. Press copy.')}};
+$('#saveOffer').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([offerText()],{type:'text/plain'}));a.download='apple-guild-offer.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('#resetPath').onclick=()=>{S=fresh();try{localStorage.removeItem(KEY)}catch(e){}
+  ['wSurv','wEase','wNut','wTime','wHosp'].forEach((id,i)=>$('#'+id).value=[30,20,25,10,15][i]);
+  $('#hospitalOnly').checked=false;weightedMode=false;sig='';all=false;$('#noteIn').value='';paintLeft();weightsChanged();sweep('back');say('Pathway and offer reset on this device')};
+
+/* ---------- I. TABLE OF CONTENTS highlight and drifting light motes ---------- */
+const links=$$('.leftbar nav a');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)links.forEach(a=>a.getAttribute('href')==='#'+e.target.id?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current'))}),{rootMargin:'-30% 0px -60% 0px'});
+links.forEach(a=>{const t=$(a.getAttribute('href'));if(t)io.observe(t)});
+if(!RM){const cv=$('#motes'),c=cv.getContext('2d'),M=[];let W,H;
+  const fit=()=>{W=cv.width=innerWidth;H=cv.height=innerHeight};fit();addEventListener('resize',fit);
+  for(let i=0;i<32;i++)M.push({x:Math.random()*W,y:Math.random()*H,r:2+Math.random()*5,s:.15+Math.random()*.35,p:Math.random()*6.28,c:i%5?'255,236,170':'170,255,200'});
+  const tick=t=>{requestAnimationFrame(tick);if(document.hidden)return;c.clearRect(0,0,W,H);c.globalCompositeOperation='lighter';energy*=.985;
+    for(const m of M){m.y-=m.s*(1+energy*3);m.x+=Math.sin(t/1800+m.p)*.4;if(m.y<-20){m.y=H+20;m.x=Math.random()*W}
+      const g=c.createRadialGradient(m.x,m.y,0,m.x,m.y,m.r*4);g.addColorStop(0,`rgba(${m.c},.5)`);g.addColorStop(1,`rgba(${m.c},0)`);c.fillStyle=g;c.beginPath();c.arc(m.x,m.y,m.r*4,0,6.283);c.fill()}};
+  requestAnimationFrame(tick)}
+
+/* ---------- J. START ---------- */
+paintLeft();
+if(saved)steer();else sync(); // a saved profile re-applies its lens weights
+})();
+</script>
+</body>
+</html>
